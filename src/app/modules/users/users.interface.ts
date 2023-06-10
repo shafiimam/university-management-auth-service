@@ -1,7 +1,7 @@
 import { Model } from 'mongoose'
 
 export type IUser = {
-  id: string
+  id?: string
   role: string
   password: string
 }
