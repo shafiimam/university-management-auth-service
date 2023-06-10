@@ -22,6 +22,7 @@ const findLastUserId = async (): Promise<string | null | undefined> => {
   return lastUser?.id
 }
 
+
 export default {
   createUser,
   findLastUserId,
