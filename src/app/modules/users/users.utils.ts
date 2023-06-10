@@ -11,7 +11,6 @@ const generateStudentId = async (): Promise<string> => {
   const currentQuarter = Math.floor((new Date().getMonth() + 3) / 3)
   const incrementalString = String(incremental).padStart(4, '0')
   const studentId = `${currentYear}-${currentQuarter}-${incrementalString}`
-  console.log('Generated Student ID:', studentId)
   return studentId
 }
 
