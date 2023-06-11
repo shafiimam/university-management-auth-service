@@ -9,7 +9,7 @@
     "lint:check": "eslint --ignore-path .eslintignore --ext .js,.ts .",
     "lint:fix": "eslint . --fix",
     "prettier:check": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
-    "prettier:fix":"prettier --ignore-path .gitignore --write . ",
+    "prettier:fix": "prettier --ignore-path .gitignore --write . ",
     "lint:prettier": "yarn lint:check && prettier:check"
   },
   "author": "shafi imam",
@@ -18,7 +18,9 @@
     "cors": "^2.8.5",
     "dotenv": "^16.1.4",
     "express": "^4.18.2",
-    "mongoose": "^7.2.2"
+    "mongoose": "^7.2.2",
+    "winston": "^3.9.0",
+    "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",
