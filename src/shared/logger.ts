@@ -1,41 +1,87 @@
 import path from 'path'
-import winston from 'winston'
-const logger = winston.createLogger({
+import { createLogger, format, transports } from 'winston'
+import DailyRotateFile from 'winston-daily-rotate-file'
+const { combine, timestamp, label, printf , prettyPrint} = format
+
+//custom log format
+const myFormat = printf(({ level, message, label, timestamp }) => {
+  return `${timestamp} [${label}] ${level}: ${message}`
+})
+
+const logger = createLogger({
   level: 'info',
-  format: winston.format.json(),
+  format: combine(
+    label({
+      label: 'user-service',
+    }),
+    timestamp(),
+    prettyPrint(),
+    myFormat
+  ),
   defaultMeta: { service: 'user-service' },
   transports: [
-    // new winston.transports.File({ filename: 'error.log', level: 'error' }),
-    new winston.transports.File({
-      filename: path.join(process.cwd(), 'logs/winston/success.log'),
+    // new transports.File({ filename: 'error.log', level: 'error' }),
+    new transports.Console(),
+    // new transports.File({
+    //   filename: path.join(
+    //     process.cwd(),
+    //     'logs/winston/application-%DATE%-success.log'
+    //   ),
+    //   level: 'info',
+    // }),
+    new DailyRotateFile({
+      filename: path.join(
+        process.cwd(),
+        'logs/successes/user-service-%DATE%-success.log'
+      ),
+      datePattern: 'YYYY-MM-DD-HH',
+      zippedArchive: true,
+      maxSize: '20m',
+      maxFiles: '14d',
       level: 'info',
     }),
     // new winston.transports.Console(),
   ],
 })
-const errorLogger = winston.createLogger({
+const errorLogger = createLogger({
   level: 'error',
-  format: winston.format.json(),
+  format: combine(
+    label({
+      label: 'user-service',
+    }),
+    timestamp(),
+    prettyPrint(),
+    myFormat
+  ),
   defaultMeta: { service: 'user-service' },
   transports: [
-    // new winston.transports.File({ filename: 'error.log', level: 'error' }),
-    new winston.transports.File({
-      filename: path.join(process.cwd(), 'logs/winston/error.log'),
+    // new transports.File({ filename: 'error.log', level: 'error' }),
+
+    new transports.Console(),
+    new DailyRotateFile({
+      filename: path.join(
+        process.cwd(),
+        'logs/errors/user-service-%DATE%-error.log'
+      ),
+      datePattern: 'YYYY-MM-DD-HH',
+      zippedArchive: true,
+      maxSize: '20m',
+      maxFiles: '14d',
       level: 'error',
     }),
-    // new winston.transports.Console(),
   ],
 })
 //
 // If we're not in production then log to the `console` with the format:
 // `${info.level}: ${info.message} JSON.stringify({ ...rest }) `
 //
-if (process.env.NODE_ENV !== 'production') {
-  logger.add(
-    new winston.transports.Console({
-      format: winston.format.simple(),
-    })
-  )
-}
+// if (process.env.NODE_ENV !== 'production') {
+//   logger.add(
+//     new transports.Console({
+//       format: format.simple(),
+//     })
+//   )
+// }
 
 export { errorLogger, logger }
+
