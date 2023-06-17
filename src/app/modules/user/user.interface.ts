@@ -9,4 +9,4 @@ export type IUser = {
 export type IUserMethods = {
   getId(): string
 }
-export type UserModel = Model<IUser, object, IUserMethods>
+export type UserModel = Model<IUser, Record<string, unknown>, IUserMethods>
