@@ -1,7 +1,8 @@
 import config from '../../../config'
-import { IUser } from './users.interface'
-import User from './users.model'
-import usersUtils from './users.utils'
+import ApiError from '../../../errors/APIError'
+import { IUser } from './user.interface'
+import User from './user.model'
+import usersUtils from './user.utils'
 
 const createUser = async (user: IUser): Promise<IUser | null> => {
   if (!user.password) {
@@ -9,7 +10,7 @@ const createUser = async (user: IUser): Promise<IUser | null> => {
   }
   user.id = await usersUtils.generateStudentId()
   const createdUser = await User.create(user)
-  if (!createUser) throw new Error('Failed to create user!')
+  if (!createUser) throw new ApiError(400, 'Failed to create user!')
   return createdUser
 }
 
@@ -22,8 +23,7 @@ const findLastUserId = async (): Promise<string | null | undefined> => {
   return lastUser?.id
 }
 
-
-export default {
+export const UserService = {
   createUser,
   findLastUserId,
 }

@@ -1,17 +1,34 @@
-import cors from 'cors'
-import express, { Application, Request, Response } from 'express'
-import usersRouter from './app/modules/users/users.route'
+import cors from 'cors';
+import express, { Application, NextFunction, Request, Response } from 'express';
+import httpStatus from 'http-status';
+import globalErrorHandler from './middleWares/globalErrorHandler';
+import appRoutes from './routes';
 
-const app: Application = express()
+const app: Application = express();
 
-app.use(cors())
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 // application routes
-app.use('/api/v1/users/', usersRouter)
+app.use('/api/v1', appRoutes);
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!')
-})
+// app.get('/', async (req: Request, res: Response, next: NextFunction) => {
+//   throw new Error('Error logger');
+// });
 
-export default app
+app.use(globalErrorHandler);
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.status(httpStatus.NOT_FOUND).json({
+    success: false,
+    message: 'Not Found',
+    errorMessages: [
+      {
+        path: req.url,
+        message: 'API not Found',
+      },
+    ],
+  });
+  next();
+});
+export default app;

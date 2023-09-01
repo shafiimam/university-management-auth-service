@@ -1,8 +1,8 @@
-import usersService from './users.service'
+import { UserService } from './user.service'
 
 const generateStudentId = async (): Promise<string> => {
   let incremental = 1
-  const lastStudentId = await usersService.findLastUserId()
+  const lastStudentId = await UserService.findLastUserId()
   if (lastStudentId) {
     const lastIncremental = parseInt(lastStudentId.split('-')[2])
     incremental = lastIncremental + 1
