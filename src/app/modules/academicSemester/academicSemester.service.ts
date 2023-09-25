@@ -5,7 +5,10 @@ import {
   IGenericResponse,
   IPaginationOptions,
 } from '../../../interfaces/common';
-import { academicSemeterTitlesCodeMapper } from './academicSemester.constant';
+import {
+  IAcademicSemesterFilters,
+  academicSemeterTitlesCodeMapper,
+} from './academicSemester.constant';
 import { IAcademicSemester } from './academicSemester.interface';
 import AcademicSemester from './academicSemester.model';
 
@@ -20,15 +23,32 @@ const createSemester = async (
 };
 
 const getAllSemesters = async (
+  filters: IAcademicSemesterFilters,
   paginationOptions: IPaginationOptions
 ): Promise<IGenericResponse<IAcademicSemester[]>> => {
+  const { searchTerm } = filters;
+
+  const acedemicSemesterSearchableFields = ['title', 'code', 'year'];
+  const andConditions = [];
+  if (searchTerm) {
+    andConditions.push({
+      $or: acedemicSemesterSearchableFields.map(field => ({
+        [field]: {
+          $regex: searchTerm,
+          $options: 'i',
+        },
+      })),
+    });
+  }
+
   const { page, limit, skip, sortBy, sortOrder } =
     calculatePagination(paginationOptions);
+
   const sortCondition: { [key: string]: SortOrder } = {};
   if (sortBy && sortOrder) {
     sortCondition[sortBy] = sortOrder;
   }
-  const result = await AcademicSemester.find()
+  const result = await AcademicSemester.find({ $and: andConditions })
     .sort(sortCondition)
     .skip(skip)
     .limit(limit);

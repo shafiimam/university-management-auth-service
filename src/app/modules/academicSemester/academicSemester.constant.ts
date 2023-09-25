@@ -37,3 +37,7 @@ export const academicSemeterTitlesCodeMapper: {
   Summer: '02',
   Fall: '03',
 };
+
+export type IAcademicSemesterFilters = {
+  searchTerm: string;
+};
