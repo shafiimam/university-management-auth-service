@@ -40,4 +40,16 @@ export const academicSemeterTitlesCodeMapper: {
 
 export type IAcademicSemesterFilters = {
   searchTerm: string;
+  title?: string;
+  code?: string;
+  year?: string;
 };
+
+export const acedemicSemesterSearchableFields = ['title', 'code', 'year'];
+
+export const acedemicSemesterFilterableFields = [
+  'searchTerm',
+  'title',
+  'code',
+  'year',
+];

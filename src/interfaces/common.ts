@@ -12,7 +12,7 @@ export type IResponsePayload<T> = {
   statusCode: number;
   message?: string | null;
   data?: T | null;
-  meta: {
+  meta?: {
     page: number;
     limit: number;
     total: number;

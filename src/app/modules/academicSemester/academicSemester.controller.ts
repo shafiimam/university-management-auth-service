@@ -4,6 +4,10 @@ import { paginationFields } from '../../../constants/pagination';
 import catchAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import sendResponse from '../../../shared/sendResponse';
+import {
+  IAcademicSemesterFilters,
+  acedemicSemesterFilterableFields,
+} from './academicSemester.constant';
 import { IAcademicSemester } from './academicSemester.interface';
 import { AcademicSemesterService } from './academicSemester.service';
 
@@ -30,10 +34,10 @@ const createAcademicSemester = catchAsync(
 
 const getAllSemester = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const filters = pick(req.query, ['searchTerm']);
+    const filters = pick(req.query, acedemicSemesterFilterableFields);
     const paginationOptions = pick(req.query, paginationFields);
     const result = await AcademicSemesterService.getAllSemesters(
-      filters,
+      filters as IAcademicSemesterFilters,
       paginationOptions
     );
     sendResponse<IAcademicSemester[]>(res, {
@@ -47,7 +51,43 @@ const getAllSemester = catchAsync(
   }
 );
 
+const getSingleSemester = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id } = req.params;
+      const result = await AcademicSemesterService.getSemester(id);
+      sendResponse(res, {
+        statusCode: httpStatus.OK,
+        success: true,
+        message: 'Academic Semester retrived successfully',
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+const updateSemester = catchAsync(async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const updateData = req.body;
+
+    const result = await AcademicSemesterService.updateSemester(id, updateData);
+    sendResponse(res, {
+      statusCode: httpStatus.OK,
+      success: true,
+      message: 'Academic Semester updated successfully',
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export const AcademicSemesterController = {
   createAcademicSemester,
   getAllSemester,
+  getSingleSemester,
+  updateSemester,
 };
