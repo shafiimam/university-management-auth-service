@@ -23,7 +23,7 @@ router.patch(
   ),
   AcademicSemesterController.updateSemester
 );
-
+router.delete('/:id', AcademicSemesterController.deleteSemester);
 const AcademicSemesterRoutes = router;
 
 export default AcademicSemesterRoutes;

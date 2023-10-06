@@ -84,7 +84,11 @@ const updateSemester = async (
   id: string,
   payload: Partial<IAcademicSemester>
 ): Promise<IAcademicSemester | null> => {
-  if (payload.title && payload.code && academicSemeterTitlesCodeMapper[payload.title] !== payload.code) {
+  if (
+    payload.title &&
+    payload.code &&
+    academicSemeterTitlesCodeMapper[payload.title] !== payload.code
+  ) {
     throw new ApiError(400, 'Academic Semester title and code does not match!');
   }
   const result = await AcademicSemester.findOneAndUpdate({ _id: id }, payload, {
@@ -93,9 +97,17 @@ const updateSemester = async (
   return result;
 };
 
+const deleteSemester = async (
+  id: string
+): Promise<IAcademicSemester | null> => {
+  const result = await AcademicSemester.findByIdAndDelete({ _id: id });
+  return result;
+};
+
 export const AcademicSemesterService = {
   createSemester,
   getAllSemesters,
   getSemester,
   updateSemester,
+  deleteSemester,
 };
