@@ -7,4 +7,5 @@ export default {
   port: process.env.PORT,
   db_url: process.env.MONGO_URI,
   default_student_pass: process.env.DEFAULT_STUDENT_PASSWORD,
+  default_faculty_pass: process.env.DEFAULT_FACULTY_PASSWORD,
 };

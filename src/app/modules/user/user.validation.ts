@@ -39,6 +39,15 @@ const createUserZodSchema = z.object({
         permanentAddress: z.string({
           required_error: 'Permanent Address is required',
         }),
+        academicSemester: z.string({
+          required_error: 'Academic semester is required',
+        }),
+        academicDepartment: z.string({
+          required_error: 'Academic department is required',
+        }),
+        academicFaculty: z.string({
+          required_error: 'Academic faculty is required',
+        }),
         guardian: z
           .object({
             fatherName: z.string().optional(),

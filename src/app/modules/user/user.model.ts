@@ -16,6 +16,7 @@ const userSchema = new Schema<IUser, UserModel, IUserMethods>(
     },
     faculty: {
       type: Schema.Types.ObjectId,
+      ref: 'Faculty',
     },
     admin: {
       type: Schema.Types.ObjectId,
