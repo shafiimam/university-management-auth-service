@@ -1,19 +1,42 @@
-import { UserService } from './user.service'
+import { IAcademicSemester } from '../academicSemester/academicSemester.interface';
+import User from './user.model';
 
-const generateStudentId = async (): Promise<string> => {
-  let incremental = 1
-  const lastStudentId = await UserService.findLastUserId()
-  if (lastStudentId) {
-    const lastIncremental = parseInt(lastStudentId.split('-')[2])
-    incremental = lastIncremental + 1
-  }
-  const currentYear = new Date().getFullYear()
-  const currentQuarter = Math.floor((new Date().getMonth() + 3) / 3)
-  const incrementalString = String(incremental).padStart(4, '0')
-  const studentId = `${currentYear}-${currentQuarter}-${incrementalString}`
-  return studentId
-}
+export const findLastStudentId = async (): Promise<string | undefined> => {
+  const lastUser = await User.findOne({ role: 'student' }, { id: 1, _id: 0 })
+    .sort({
+      createdAt: -1,
+    })
+    .lean();
 
-export default {
-  generateStudentId,
-}
+  return lastUser?.id ? lastUser.id.substring(4) : undefined;
+};
+
+export const generateStudentId = async (
+  academicSemester: IAcademicSemester | null
+): Promise<string> => {
+  const currentId =
+    (await findLastStudentId()) || (0).toString().padStart(5, '0');
+  let incrementedId = (parseInt(currentId) + 1).toString().padStart(5, '0');
+
+  incrementedId = `${academicSemester?.year?.substring(2)}${
+    academicSemester?.code
+  }${incrementedId}`;
+  return incrementedId;
+};
+
+export const findLastFacultyId = async (): Promise<string | undefined> => {
+  const lastFaculty = await User.findOne({ role: 'faculty' }, { id: 1, _id: 0 })
+    .sort({
+      createdAt: -1,
+    })
+    .lean();
+  return lastFaculty?.id ? lastFaculty.id.substring(2) : undefined;
+};
+
+export const generateFacultyId = async (): Promise<string> => {
+  const currentId =
+    (await findLastFacultyId()) || (0).toString().padStart(5, '0');
+  let incrementedId = (parseInt(currentId) + 1).toString().padStart(5, '0');
+  incrementedId = `F${incrementedId}`;
+  return incrementedId;
+};

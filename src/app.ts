@@ -31,4 +31,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   });
   next();
 });
+
+// generateFacultyId().then(data => console.log('test id ', data));
 export default app;
